@@ -7,11 +7,10 @@
 #include <vector>
 #include <map>
 #include <iostream>
+#include <string>
 #include <fstream>
 #include "GlutDemoApplication.h"
 #include "LinearMath/btAlignedObjectArray.h"
-#include "zmq.hpp"
-#include "zhelpers.hpp"
 
 class btBroadphaseInterface;
 class btCollisionShape;
@@ -30,12 +29,13 @@ class Hexapod;
 class HexapodServer
 {
 public:
-    HexapodServer(Hexapod* _hexapod): ctx(1), serverSocket(ctx, ZMQ_STREAM), hexapod(_hexapod){
+    HexapodServer(Hexapod* _hexapod,int mode):hexapod(_hexapod), simpleMode_(mode){
         servosMap.clear();
         std::ifstream configFile;
         configFile.open("config.txt");
         int count;
         configFile>>count;
+        std::cout<<"Mode: " << simpleMode_ << std::endl;
         std::cout<<"Servo mapping: "<<std::endl;
         for(int i=0; i<count; ++i)
         {
@@ -47,9 +47,8 @@ public:
     }
     void run();
 private:
-    zmq::context_t ctx;
-    zmq::socket_t serverSocket;
     Hexapod* hexapod;
+    int simpleMode_;
     std::map<int, int> servosMap; // first: input servo ID
                                  // second: actual servo ID in this system
 };
@@ -76,9 +75,9 @@ class Hexapod : public GlutDemoApplication
     HexapodServer *hexapodServer;
 
 public:
-    Hexapod()
+    Hexapod(int mode):simpleMode_(mode)
     {
-        hexapodServer = new HexapodServer(this);
+        hexapodServer = new HexapodServer(this,simpleMode_);
         std::thread t1(std::bind(&HexapodServer::run, hexapodServer));
         t1.detach();
         for(int i=0; i<JOINT_COUNT; ++i)
@@ -103,13 +102,15 @@ public:
 
     virtual void keyboardCallback(unsigned char key, int x, int y);
 
-    static DemoApplication* Create()
-    {
-        Hexapod* demo = new Hexapod();
-        demo->myinit();
-        demo->initPhysics();
-        return demo;
-    }
+//    static DemoApplication* Create()
+//    {
+//        Hexapod* demo = new Hexapod(simpleMode_);
+//        demo->myinit();
+//        demo->initPhysics();
+//        return demo;
+//    }
+
+    int simpleMode_;
     float servoPercentage[JOINT_COUNT];
     void setServoPercentValue(int rigId, int jointId, btScalar targetPercent);
     void setServoPercent(int rigId, int jointId, btScalar targetPercent, float deltaMs);

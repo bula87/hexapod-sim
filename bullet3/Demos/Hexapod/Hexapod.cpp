@@ -6,7 +6,8 @@
 
 #include "GLDebugDrawer.h"
 #include "Hexapod.h"
-
+#include <sstream>
+#include <iostream>
 
 #ifndef M_PI
 #define M_PI       3.14159265358979323846
@@ -80,15 +81,16 @@ std::vector<std::string> split(const std::string &s, char delim)
 
 void HexapodServer::run()
 {
-    serverSocket.bind ("tcp://*:5555");
-    std::cout<<"serverSocket.bind()"<<std::endl;
     while (true)
     {
-        std::cout<<"Waiting for request.."<<std::endl;
-        zmq::message_t request;
-        serverSocket.recv (&request);
-        std::string requestStr = std::string(static_cast<char*>(request.data()), request.size());
+        std::string requestStr;
+        std::cin.clear(); std::cin.sync();
+        std::getline(std::cin, requestStr);
         std::cout<<"Request: "<<requestStr<<std::endl;
+        if(simpleMode_==1)
+        {
+          requestStr = requestStr + "\r";
+        }
         std::vector<std::string> splitCommands = split(requestStr, '#');
         for(int i=0; i<splitCommands.size(); ++i)
         {
@@ -108,7 +110,6 @@ void HexapodServer::run()
             }
             hexapod->setServoPercentValue(0, servoId - 1, anglePercent);
         }
-        serverSocket.send(request, ZMQ_SNDMORE);
     }
 }
 

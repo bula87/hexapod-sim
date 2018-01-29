@@ -14,7 +14,6 @@ INCLUDE_DIRECTORIES(
 ${BULLET_PHYSICS_SOURCE_DIR}/src 
 ../OpenGL 
 ${GLUT_INCLUDE_DIR} 
-../../../zeromq-4.0.5/include 
 )
 LINK_LIBRARIES(
 OpenGLSupport BulletDynamics  BulletCollision LinearMath ${GLUT_glut_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY}
@@ -25,7 +24,7 @@ ADD_EXECUTABLE(Hexapod
         main.cpp
 )
 
-set (CMAKE_CXX_FLAGS "-std=c++11 -g -L../../../zeromq-4.0.5/src/.libs/ -Bstatic -lzmq")
+set (CMAKE_CXX_FLAGS "-std=c++11 -g -L../../../zeromq-4.0.5/src/.libs/ -Bstatic -pthread")
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
 			SET_TARGET_PROPERTIES(AppMotorDemo PROPERTIES  DEBUG_POSTFIX "_Debug")
