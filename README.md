@@ -1,49 +1,67 @@
 # Hexapod Simulator
-A simulator for Hexapods.  
+A simulator for Hexapods forked from billhsu github (https://github.com/billhsu/hexapod-sim)
 [![Demo video](http://img.youtube.com/vi/59QpA3tUnTU/0.jpg)](http://www.youtube.com/watch?v=59QpA3tUnTU)
 
 ## How to build
 
 ```
-./configure.sh
-cd Hexapod
-make
+./build.sh
 ```
 
 ## How to run
 ```
 cd Hexapod
-./Hexapod
+./Hexapod               Regular mode, accepts command from terminal and require "\r \n" on the end of every command
+./Hexapod -s            Simple mode, accepts command from terminal and DO NOT require "\r \n" on the end of every command
+./Hexapod /dev/ttyUSB0  Regular mode, but accepts commands from provided Serial device
 ```
-# How to control the servos
+
+Hint:
+You can emulate Serial device with commands:
 ```
-telnet localhost 5555
-#{servoId}P{PWM}  
+socat -d -d pty,raw,echo=0 pty,raw,echo=0
+```
+You will get something like this:
+```
+2018/01/30 13:54:17 socat[179615] N PTY is /dev/pts/5
+2018/01/30 13:54:17 socat[179615] N PTY is /dev/pts/6
+```
+
+Now you can write to virtual Serial device:
+```
+echo "#2P2000\r\n" > /dev/pts/6
+```
+
+And read from it:
+```
+cat < /dev/pts/5
+```
+But it is better to connect Hexapod simulator to this virtual device by:
+```
+./Hexapod /dev/pts/5
+```
+
+Now you can write commands to it:
+```
+echo "#2P2000\r\n" > /dev/pts/6
+```
+And see the results on the screen
+
+```
+# Accepted commands (standard for SSC32 and Veyron 24 Servo Controller)
+```
+#{servoId}P{PWM}
 ```
 {servoId} is from 1 to 9 and from 32 to 24, {PWM} is from 500 to 2500.
 
 Sample
 ```
-#1P1500#2P3000
+#1P1500#2P3000\r\n
 ```
 
 You can config the servo mapping in Hexapod/config.txt.
 
-
-# How to run multiple commands
-Save the commands in a file(e.g. testData.txt)
-```
-#1P1500#2P2000#3P1277#29P1500#28P1000#27P1722#7P1500#8P2000#9P1277#32P1833#31P1611#30P1277#4P1166#5P1388#6P1722#26P1833#25P1611#24P1277T400\r\n
-#1P1500#2P1388#3P1722#29P1500#28P1611#27P1277#7P1500#8P1388#9P1722#32P1833#31P1000#30P1722#4P1166#5P2000#6P1277#26P1833#25P1000#24P1722T400\r\n
-#1P1166#2P1388#3P1722#29P1833#28P1611#27P1277#7P1166#8P1388#9P1722#32P1500#31P1000#30P1722#4P1500#5P2000#6P1277#26P1500#25P1000#24P1722T400\r\n
-
-```
-
-Then run the following command
-```
-cd Hexapod
-./run_command.rb testData.txt
-```
-
 # Screenshot
 ![Screenshot](screenshots/screenshot.png)
+
+
