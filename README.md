@@ -23,8 +23,8 @@ socat -d -d pty,raw,echo=0 pty,raw,echo=0
 ```
 You will get something like this:
 ```
-2018/01/30 13:54:17 socat[179615] N PTY is /dev/pts/5
-2018/01/30 13:54:17 socat[179615] N PTY is /dev/pts/6
+2018/01/30 13:54:17 socat[179615] N PTY is /dev/pts/5          <- read from
+2018/01/30 13:54:17 socat[179615] N PTY is /dev/pts/6          <- write to
 ```
 
 Now you can write to virtual Serial device:
