@@ -81,12 +81,20 @@ std::vector<std::string> split(const std::string &s, char delim)
 
 void HexapodServer::run()
 {
+    serial serialPort(serialDevice_);
     while (true)
     {
         std::string requestStr;
         std::cin.clear(); std::cin.sync();
-        std::getline(std::cin, requestStr);
-        std::cout<<"Request: "<<requestStr<<std::endl;
+        if(!serialPort.isPortOpen())        
+        {
+          std::getline(std::cin, requestStr);
+        }
+        else
+        {
+          requestStr = serialPort.readSerial();
+        }
+        std::cout << "Request: " << requestStr << std::endl;
         if(simpleMode_==1)
         {
           requestStr = requestStr + "\r";

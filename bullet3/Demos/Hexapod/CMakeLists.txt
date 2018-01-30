@@ -22,9 +22,10 @@ OpenGLSupport BulletDynamics  BulletCollision LinearMath ${GLUT_glut_LIBRARY} ${
 ADD_EXECUTABLE(Hexapod
         Hexapod.cpp
         main.cpp
+        serial.cpp
 )
 
-set (CMAKE_CXX_FLAGS "-std=c++11 -g -L../../../zeromq-4.0.5/src/.libs/ -Bstatic -pthread")
+set (CMAKE_CXX_FLAGS "-std=c++11 -g -Bstatic -pthread")
 
 IF (INTERNAL_ADD_POSTFIX_EXECUTABLE_NAMES)
 			SET_TARGET_PROPERTIES(AppMotorDemo PROPERTIES  DEBUG_POSTFIX "_Debug")

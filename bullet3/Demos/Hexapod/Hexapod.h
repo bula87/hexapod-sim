@@ -10,6 +10,7 @@
 #include <string>
 #include <fstream>
 #include "GlutDemoApplication.h"
+#include "serial.h"
 #include "LinearMath/btAlignedObjectArray.h"
 
 class btBroadphaseInterface;
@@ -29,7 +30,7 @@ class Hexapod;
 class HexapodServer
 {
 public:
-    HexapodServer(Hexapod* _hexapod,int mode):hexapod(_hexapod), simpleMode_(mode){
+    HexapodServer(Hexapod* _hexapod,int mode, std::string serialDevice):hexapod(_hexapod), simpleMode_(mode), serialDevice_(serialDevice){
         servosMap.clear();
         std::ifstream configFile;
         configFile.open("config.txt");
@@ -49,6 +50,7 @@ public:
 private:
     Hexapod* hexapod;
     int simpleMode_;
+    std::string serialDevice_;
     std::map<int, int> servosMap; // first: input servo ID
                                  // second: actual servo ID in this system
 };
@@ -75,9 +77,9 @@ class Hexapod : public GlutDemoApplication
     HexapodServer *hexapodServer;
 
 public:
-    Hexapod(int mode):simpleMode_(mode)
+    Hexapod(int mode, std::string serialDevice):simpleMode_(mode)
     {
-        hexapodServer = new HexapodServer(this,simpleMode_);
+        hexapodServer = new HexapodServer(this,simpleMode_,serialDevice);
         std::thread t1(std::bind(&HexapodServer::run, hexapodServer));
         t1.detach();
         for(int i=0; i<JOINT_COUNT; ++i)
