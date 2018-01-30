@@ -47,7 +47,6 @@ echo "#2P2000\r\n" > /dev/pts/6
 ```
 And see the results on the screen
 
-```
 # Accepted commands (standard for SSC32 and Veyron 24 Servo Controller)
 ```
 #{servoId}P{PWM}
