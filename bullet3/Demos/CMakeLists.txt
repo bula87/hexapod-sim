@@ -10,7 +10,8 @@ IF (USE_GLUT)
 			ENDIF()
 			SET(SharedDemoSubdirs
 				OpenGL   
-				Hexapod
+				Hexapod 
+				Hexapod2
 			)
 		ELSE()
 			SET(SharedDemoSubdirs			OpenGL		)
