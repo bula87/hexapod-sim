@@ -6,6 +6,8 @@ A simulator for Hexapods forked from billhsu github (https://github.com/billhsu/
 
 ```
 ./build.sh
+Note: Glut lib is needed:
+sudo apt-get install freeglut3-dev
 ```
 
 ## How to run
